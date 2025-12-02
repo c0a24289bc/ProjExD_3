@@ -30,10 +30,10 @@ class Bird:
     ゲームキャラクター（こうかとん）に関するクラス
     """
     delta = {  # 押下キーと移動量の辞書
-        pg.K_UP: (0, -5),
-        pg.K_DOWN: (0, +5),
-        pg.K_LEFT: (-5, 0),
-        pg.K_RIGHT: (+5, 0),
+        pg.K_w: (0, -5),
+        pg.K_s: (0, +5),
+        pg.K_a: (-5, 0),
+        pg.K_d: (+5, 0),
     }
     img0 = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9)
     img = pg.transform.flip(img0, True, False)  # デフォルトのこうかとん（右向き）
@@ -171,6 +171,7 @@ def main():
     #     bomb = Bomb((255, 0, 0), 10)
     #     bombs.append(bomb)
     bombs = [Bomb((225, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]
+    beams = [] # 複数ビームのリスト
     beam = None  # ゲーム初期化時にはビームは存在しない
     clock = pg.time.Clock()
     tmr = 0
@@ -180,7 +181,7 @@ def main():
                 return
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
                 # スペースキー押下でBeamクラスのインスタンス生成
-                beam = Beam(bird)            
+                beams.append(Beam(bird))            
         screen.blit(bg_img, [0, 0])
         
         for b, bomb in enumerate(bombs):
@@ -192,6 +193,7 @@ def main():
                 pg.display.update()
                 time.sleep(1)
                 return
+            
         for b, bomb in enumerate(bombs):
             if beam is not None:
                 if beam.rct.colliderect(bomb.rct):
@@ -199,6 +201,7 @@ def main():
                     beam = None
                     bomb = None
                     bombs[b] = None
+                    beams[b] = None
                     bird.change_img(6, screen)
                     score.add_score()
                     pg.display.update()
@@ -206,7 +209,7 @@ def main():
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
-        if beam is not None: #ビームが存在していたら
+        for beam in beams:
             beam.update(screen)    
         for bomb in bombs:         
             bomb.update(screen)
