@@ -48,6 +48,7 @@ class Bird:
         (+5, +5): pg.transform.rotozoom(img, -45, 0.9),  # 右下
     }
 
+    
     def __init__(self, xy: tuple[int, int]):
         """
         こうかとん画像Surfaceを生成する
@@ -57,6 +58,7 @@ class Bird:
         self.rct: pg.Rect = self.img.get_rect()
         self.rct.center = xy
 
+    
     def change_img(self, num: int, screen: pg.Surface):
         """
         こうかとん画像を切り替え，画面に転送する
@@ -66,6 +68,7 @@ class Bird:
         self.img = pg.transform.rotozoom(pg.image.load(f"fig/{num}.png"), 0, 0.9)
         screen.blit(self.img, self.rct)
 
+    
     def update(self, key_lst: list[bool], screen: pg.Surface):
         """
         押下キーに応じてこうかとんを移動させる
@@ -142,7 +145,13 @@ class Bomb:
 
 
 class Score:
+    """
+    スコアに関するクラス
+    """
     def __init__(self):
+        """
+        文字の設定と位置の設定
+        """
         self.fonto = pg.font.SysFont("hgp創英角ﾎﾟｯﾌﾟ体", 30)
         self.color = (0, 0, 255)
         self.score = 0
@@ -152,9 +161,15 @@ class Score:
         self.rct.bottom = HEIGHT - 50
 
     def add_score(self):
+        """
+        スコアを加算する
+        """
         self.score += 1
     
     def update(self, screen: pg.Surface):
+        """
+        スコアを画面に表示する
+        """
         self.img = self.fonto.render(f"スコア：{self.score}", 0, self.color)
         screen.blit(self.img, self.rct)
 
